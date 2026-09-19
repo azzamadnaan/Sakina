@@ -1,7 +1,8 @@
 name: sakinah
-description: "Sakinah – Islamic AI assistant"
+description: "Sakinah - Islamic AI assistant"
 publish_to: "none"
 version: 1.0.0+1
+
 environment:
   sdk: ">=3.3.0 <4.0.0"
 
@@ -20,10 +21,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    # أيقونة التطبيق – استبدلها بالصورة التي تريدها
+    # أيقونة التطبيق
     - assets/images/app_icon.png
-    # شعار اختيارى يُعرض في حالة فشل تشغيل الفيديو
-    - assets/images/splash_logo.png
-    # فيديو شاشة البداية – استبدله بالفيديو الخاص بك
+    # فيديو البداية
     - assets/images/splash_video.mp4
-    
