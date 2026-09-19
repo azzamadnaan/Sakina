@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sakinah/screens/splash_screen.dart';
 import 'package:sakinah/utils/theme.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const SakinahApp());
 }
@@ -16,19 +15,17 @@ class SakinahApp extends StatelessWidget {
     return MaterialApp(
       title: 'سكينة',
       debugShowCheckedModeBanner: false,
-      theme: appTheme,
-      locale: const Locale('ar'),               // العربية هي اللغة الأساسية
+      theme: AppTheme.lightTheme,
+      locale: const Locale('ar'),
       supportedLocales: const [
-        Locale('ar'),                           // العربية
-        Locale('en'),                           // الإنجليزية (fallback)
+        Locale('ar'),
+        Locale('en'),
       ],
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-    //    GlobalCupertinoLocalizations.delegate,
-      ],
+      builder: (context, child) => Directionality(
+        textDirection: TextDirection.rtl,
+        child: child ?? const SizedBox.shrink(),
+      ),
       home: const SplashScreen(),
     );
   }
 }
-
