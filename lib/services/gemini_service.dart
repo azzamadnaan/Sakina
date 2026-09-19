@@ -6,9 +6,8 @@ import 'package:sakinah/config.dart';
 class GeminiService {
   final _client = http.Client();
 
-  /// Sends a chat request to Gemini and returns the assistant's response.
-  /// [messages] should contain the last 10 chat entries, each as a map:
-  /// { "role": "user" | "model", "content": "text" }
+  /// يُرسل رسالة إلى نموذج Gemini ويُعيد النص المستجيب.
+  /// يُمرّر [messages] قائمة من الخرائط: {"role":"user|model","content":"النص"}
   Future<String> sendMessage(List<Map<String, String>> messages) async {
     final uri = Uri.parse(
         '${Config.geminiBaseUrl}/${Config.geminiModel}:generateContent?key=${Config.geminiApiKey}');
@@ -35,7 +34,6 @@ class GeminiService {
       if (finishReason == 'SAFETY' ||
           finishReason == 'PROHIBITED_CONTENT' ||
           finishReason == 'BLOCKLIST') {
-        // Return a refusal message.
         return _refusalMessage();
       }
 
@@ -55,7 +53,7 @@ class GeminiService {
   }
 
   Map<String, dynamic> _buildRequestBody(List<Map<String, String>> msgs) {
-    // Convert messages to Gemini "contents" format.
+    // صياغة محتوى Gemini.
     final List<Map<String, dynamic>> contents = [
       {
         'role': 'user',
