@@ -12,7 +12,9 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   late final VideoPlayerController _controller;
-  bool _fallbackShown = false; // إذا فشل الفيديو نُظهر fallback.
+  bool _fallbackShown = false;
+  bool _navigated = false;
+  Timer? _fallbackTimer;
 
   @override
   void initState() {
@@ -20,39 +22,46 @@ class _SplashScreenState extends State<SplashScreen> {
     _initializeVideo();
   }
 
-  /// يحمِّل الفيديو من الـ assets.
-  /// إذا غيرت اسم الملف أو مساره، عدِّل السطر داخل `VideoPlayerController.asset(...)`.
   Future<void> _initializeVideo() async {
     try {
       _controller = VideoPlayerController.asset(
-          'assets/images/splash_video.mp4') // <‑‑ عدِّل المسار هنا إذا لزم
-        ..initialize().then((_) {
-          setState(() {});
-          _controller.play();
-          _controller.setLooping(false);
-          _controller.addListener(_videoListener);
-        });
-    } catch (_) {
+        'assets/images/splash_video.mp4',
+      );
+      await _controller.initialize();
+      await _controller.setVolume(1.0);
+      await _controller.setLooping(false);
+      await _controller.play();
+
+      _controller.addListener(_videoListener);
+
+      if (mounted) setState(() {});
+
+      // ⏱️ احتياط: انتقل بعد 15 ثانية
+      _fallbackTimer = Timer(const Duration(seconds: 15), _navigateToChat);
+    } catch (e) {
+      debugPrint('Video failed: $e');
       _showFallback();
     }
   }
 
   void _videoListener() {
     if (_controller.value.isInitialized &&
-        _controller.value.position >= _controller.value.duration) {
+        _controller.value.position >= _controller.value.duration &&
+        _controller.value.duration > Duration.zero) {
       _navigateToChat();
     }
   }
 
-  /// تُظهر شاشة بديلة في حال فشل تشغيل الفيديو.
   void _showFallback() {
-    if (_fallbackShown) return;
-    _fallbackShown = true;
-    // بديل بسيط لمدة 3 ثوانٍ ثم الانتقال.
+    if (_fallbackShown || !mounted) return;
+    setState(() => _fallbackShown = true);
     Timer(const Duration(seconds: 3), _navigateToChat);
   }
 
   void _navigateToChat() {
+    if (_navigated || !mounted) return;
+    _navigated = true;
+    _fallbackTimer?.cancel();
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => const AiChatScreen()),
     );
@@ -60,23 +69,24 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void dispose() {
-    if (!_fallbackShown) {
+    _fallbackTimer?.cancel();
+    try {
       _controller.removeListener(_videoListener);
       _controller.dispose();
-    }
+    } catch (_) {}
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // حالة fallback (فشل الفيديو أو لم يُضيف بعد)
+    // 🎨 حالة الفشل
     if (_fallbackShown) {
-      return Scaffold(
-        backgroundColor: const Color(0xFFB71C1C),
+      return const Scaffold(
+        backgroundColor: Color(0xFFD81B60),
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: const [
+            children: [
               Icon(Icons.spa, size: 80, color: Colors.white),
               SizedBox(height: 20),
               CircularProgressIndicator(color: Colors.white),
@@ -86,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen> {
       );
     }
 
-    // عندما يـُجهّز الفيديو
+    // 🎬 حالة الفيديو
     if (_controller.value.isInitialized) {
       return Scaffold(
         backgroundColor: Colors.black,
@@ -99,10 +109,10 @@ class _SplashScreenState extends State<SplashScreen> {
       );
     }
 
-    // حالة الانتظار أثناء تحميل الأصول
-    return Scaffold(
+    // ⏳ حالة التحميل
+    return const Scaffold(
       backgroundColor: Colors.black,
-      body: const Center(
+      body: Center(
         child: CircularProgressIndicator(color: Colors.white),
       ),
     );
