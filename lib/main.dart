@@ -15,7 +15,7 @@ class SakinahApp extends StatelessWidget {
     return MaterialApp(
       title: 'سكينة',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
+      theme: appTheme,        // ← التغيير هنا: appTheme بدل AppTheme.lightTheme
       locale: const Locale('ar'),
       supportedLocales: const [
         Locale('ar'),
