@@ -25,7 +25,7 @@ class SakinahApp extends StatelessWidget {
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
+    //    GlobalCupertinoLocalizations.delegate,
       ],
       home: const SplashScreen(),
     );
