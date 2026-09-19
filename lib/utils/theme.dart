@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 final ThemeData appTheme = ThemeData(
-  // Disable Material 3 as required.
+  // لا نستخدم Material 3 وفقًا للمتطلبات.
   useMaterial3: false,
   scaffoldBackgroundColor: const Color(0xFFFFFFFF),
   primaryColor: const Color(0xFFD81B60),
@@ -27,4 +27,3 @@ final ThemeData appTheme = ThemeData(
     contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
   ),
 );
-
