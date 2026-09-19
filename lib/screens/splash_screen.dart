@@ -12,7 +12,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   late final VideoPlayerController _controller;
-  bool _fallbackShown = false;
+  bool _fallbackShown = false; // إذا فشل الفيديو نُظهر fallback.
 
   @override
   void initState() {
@@ -20,10 +20,12 @@ class _SplashScreenState extends State<SplashScreen> {
     _initializeVideo();
   }
 
+  /// يحمِّل الفيديو من الـ assets.
+  /// إذا غيرت اسم الملف أو مساره، عدِّل السطر داخل `VideoPlayerController.asset(...)`.
   Future<void> _initializeVideo() async {
     try {
       _controller = VideoPlayerController.asset(
-          'assets/images/splash_video.mp4')
+          'assets/images/splash_video.mp4') // <‑‑ عدِّل المسار هنا إذا لزم
         ..initialize().then((_) {
           setState(() {});
           _controller.play();
@@ -42,10 +44,11 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
+  /// تُظهر شاشة بديلة في حال فشل تشغيل الفيديو.
   void _showFallback() {
     if (_fallbackShown) return;
     _fallbackShown = true;
-    // Show a simple gradient with logo for 3 seconds then navigate.
+    // بديل بسيط لمدة 3 ثوانٍ ثم الانتقال.
     Timer(const Duration(seconds: 3), _navigateToChat);
   }
 
@@ -66,6 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // حالة fallback (فشل الفيديو أو لم يُضيف بعد)
     if (_fallbackShown) {
       return Scaffold(
         backgroundColor: const Color(0xFFB71C1C),
@@ -82,6 +86,7 @@ class _SplashScreenState extends State<SplashScreen> {
       );
     }
 
+    // عندما يـُجهّز الفيديو
     if (_controller.value.isInitialized) {
       return Scaffold(
         backgroundColor: Colors.black,
@@ -94,7 +99,7 @@ class _SplashScreenState extends State<SplashScreen> {
       );
     }
 
-    // Loading state while video assets load.
+    // حالة الانتظار أثناء تحميل الأصول
     return Scaffold(
       backgroundColor: Colors.black,
       body: const Center(
