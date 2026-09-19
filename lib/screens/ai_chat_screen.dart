@@ -22,9 +22,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
   void initState() {
     super.initState();
     _loadHistory();
-    if (_messages.isEmpty) {
-      _addSystemMessage(_welcomeMessage);
-    }
+    if (_messages.isEmpty) _addSystemMessage(_welcomeMessage);
   }
 
   Future<void> _loadHistory() async {
@@ -70,7 +68,7 @@ class _AiChatScreenState extends State<AiChatScreen> {
     _controller.clear();
     await _saveHistory();
 
-    // Keep only last 10 messages for context.
+    // الاحتفاظ بآخر 10 رسائل فقط (دون الروبوت الخاص)
     final recent = _messages
         .where((m) => m.role != Role.system)
         .skip((_messages.length - 10).clamp(0, _messages.length))
@@ -245,4 +243,3 @@ class _ChatMessage {
         'timestamp': timestamp.toIso8601String(),
       };
 }
-
