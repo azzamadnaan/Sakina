@@ -1,15 +1,12 @@
 class Config {
-  // Replace with your actual Gemini API key.
+  // 👉 استبدل YOUR_GEMINI_API_KEY بمفتاح Gemini الخاص بك.
   static const String geminiApiKey = 'AQ.Ab8RN6LXILjvs3mLh7IbsrwtylorrEcqxSIXuPv_c79hfEADDA';
 
-  // Gemini endpoint base.
   static const String geminiBaseUrl =
       'https://generativelanguage.googleapis.com/v1beta/models';
-
-  // Model to use.
   static const String geminiModel = 'gemini-2.0-flash';
 
-  // System prompt for the assistant.
+  // نظام الحوار (system prompt) – لا تحتاج لتعديله ما لم ترغب في تعديل سلوك المساعدة.
   static const String systemPrompt = '''
 أنتِ "سكينة"، مساعدة إسلامية ذكية، ملتزمة بتعاليم الإسلام السمحاء.
 
@@ -50,4 +47,3 @@ class Config {
 - تجنبي الفتوى في القضايا الكبرى، وأحلي المستخدم لأهل العلم.
 ''';
 }
-
